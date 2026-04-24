@@ -9,6 +9,10 @@ import GiorgiaFormicola.U5_W3_D5.payloads.EventDTO;
 import GiorgiaFormicola.U5_W3_D5.repositories.EventsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -55,5 +59,13 @@ public class EventsService {
         Event updatedEvent = this.eventsRepository.save(found);
         log.info("Event with id " + updatedEvent.getId() + " successfully modified");
         return updatedEvent;
+    }
+
+    public Page<Event> findAll(int page, int size, String sortBy) {
+        if (page < 0) page = 0;
+        if (size < 0 || size > 100) size = 5;
+        Pageable pageable;
+        pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.eventsRepository.findAll(pageable);
     }
 }

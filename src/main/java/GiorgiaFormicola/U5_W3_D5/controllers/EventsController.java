@@ -6,6 +6,7 @@ import GiorgiaFormicola.U5_W3_D5.exceptions.PayloadValidationException;
 import GiorgiaFormicola.U5_W3_D5.payloads.EventDTO;
 import GiorgiaFormicola.U5_W3_D5.services.EventsService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +32,16 @@ public class EventsController {
             throw new PayloadValidationException(errors);
         }
         return this.eventsService.save(currentAuthenticatedUser, body);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('CUSTOMER', 'PROMOTER')")
+    public Page<Event> getEvents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "date") String sortBy
+    ) {
+        return this.eventsService.findAll(page, size, sortBy);
     }
 
     @PutMapping("/{eventId}")
