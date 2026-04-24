@@ -4,6 +4,7 @@ import GiorgiaFormicola.U5_W3_D5.entities.Reservation;
 import GiorgiaFormicola.U5_W3_D5.entities.User;
 import GiorgiaFormicola.U5_W3_D5.exceptions.PayloadValidationException;
 import GiorgiaFormicola.U5_W3_D5.payloads.ReservationDTO;
+import GiorgiaFormicola.U5_W3_D5.services.EventsService;
 import GiorgiaFormicola.U5_W3_D5.services.ReservationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ReservationsController {
     private final ReservationsService reservationsService;
+    private final EventsService eventsService;
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)

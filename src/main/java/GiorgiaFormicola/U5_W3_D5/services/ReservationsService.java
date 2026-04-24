@@ -34,4 +34,5 @@ public class ReservationsService {
         log.info("Reservation with id " + savedReservation.getId() + " successfully saved!");
         return savedReservation;
     }
+
 }

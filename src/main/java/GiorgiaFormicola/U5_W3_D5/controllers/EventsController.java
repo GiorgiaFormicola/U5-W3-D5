@@ -71,4 +71,13 @@ public class EventsController {
         this.eventsService.findByIdAndDelete(currentAuthenticatedUser, eventId);
     }
 
+    @GetMapping("/me/reservations")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER', 'PROMOTER')")
+    public Page<Event> getMyReservedEvents(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "event.date") String sortBy) {
+        return this.eventsService.findAllEventsReservedByCustomer(currentAuthenticatedUser, page, size, sortBy);
+    }
 }

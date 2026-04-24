@@ -85,4 +85,11 @@ public class EventsService {
         this.eventsRepository.delete(found);
     }
 
+    public Page<Event> findAllEventsReservedByCustomer(User currentAuthenticatedUser, int page, int size, String sortBy) {
+        if (page < 0) page = 0;
+        if (size < 0 || size > 100) size = 5;
+        Pageable pageable;
+        pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.eventsRepository.findAllReservedByCustomer(currentAuthenticatedUser.getId(), pageable);
+    }
 }
