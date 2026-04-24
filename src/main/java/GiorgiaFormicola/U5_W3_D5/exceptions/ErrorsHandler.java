@@ -29,4 +29,10 @@ public class ErrorsHandler {
     public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return new ErrorDTO("Not valid value provided", LocalDateTime.now());
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDTO handleUnauthorizedException(UnauthorizedException ex) {
+        return new ErrorDTO(ex.getMessage(), LocalDateTime.now());
+    }
 }

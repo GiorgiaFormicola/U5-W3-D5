@@ -1,10 +1,13 @@
 package GiorgiaFormicola.U5_W3_D5.security;
 
+import GiorgiaFormicola.U5_W3_D5.entities.User;
 import GiorgiaFormicola.U5_W3_D5.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 public class TokenTools {
@@ -20,6 +23,15 @@ public class TokenTools {
         } catch (Exception ex) {
             throw new UnauthorizedException("Some issues with your token occurred! Try login again!");
         }
+    }
+
+    public String generateToken(User user) {
+        return Jwts.builder()
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .subject(String.valueOf(user.getId()))
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .compact();
     }
 
 }

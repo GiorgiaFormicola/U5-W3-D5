@@ -2,7 +2,10 @@ package GiorgiaFormicola.U5_W3_D5.controllers;
 
 import GiorgiaFormicola.U5_W3_D5.entities.User;
 import GiorgiaFormicola.U5_W3_D5.exceptions.PayloadValidationException;
+import GiorgiaFormicola.U5_W3_D5.payloads.LoginDTO;
+import GiorgiaFormicola.U5_W3_D5.payloads.LoginResponseDTO;
 import GiorgiaFormicola.U5_W3_D5.payloads.SignInDTO;
+import GiorgiaFormicola.U5_W3_D5.services.AuthService;
 import GiorgiaFormicola.U5_W3_D5.services.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthController {
     private final UsersService usersService;
+    private final AuthService authService;
 
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.CREATED)
@@ -26,6 +30,15 @@ public class AuthController {
             throw new PayloadValidationException(errors);
         }
         return this.usersService.save(body);
+    }
+
+    @PostMapping("/login")
+    public LoginResponseDTO login(@RequestBody @Validated LoginDTO body, BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            List<String> errors = validationResult.getAllErrors().stream().map(error -> error.getDefaultMessage()).toList();
+            throw new PayloadValidationException(errors);
+        }
+        return new LoginResponseDTO(this.authService.checkUserCredentialsAndGenerateToken(body));
     }
 
 }

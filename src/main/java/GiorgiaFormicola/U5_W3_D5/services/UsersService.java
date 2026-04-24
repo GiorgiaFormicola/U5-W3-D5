@@ -3,6 +3,7 @@ package GiorgiaFormicola.U5_W3_D5.services;
 import GiorgiaFormicola.U5_W3_D5.entities.User;
 import GiorgiaFormicola.U5_W3_D5.enums.RoleType;
 import GiorgiaFormicola.U5_W3_D5.exceptions.BadRequestException;
+import GiorgiaFormicola.U5_W3_D5.exceptions.NotFoundException;
 import GiorgiaFormicola.U5_W3_D5.payloads.SignInDTO;
 import GiorgiaFormicola.U5_W3_D5.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,10 @@ public class UsersService {
         log.info(savedUser.getRole().name() + " with id " + savedUser.getId() + " successfully saved");
         return savedUser;
     }
+
+    public User findByEmail(String email) {
+        return this.usersRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(email));
+    }
+
+
 }
