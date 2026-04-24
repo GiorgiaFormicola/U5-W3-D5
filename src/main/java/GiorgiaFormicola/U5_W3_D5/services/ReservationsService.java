@@ -4,6 +4,7 @@ import GiorgiaFormicola.U5_W3_D5.entities.Event;
 import GiorgiaFormicola.U5_W3_D5.entities.Reservation;
 import GiorgiaFormicola.U5_W3_D5.entities.User;
 import GiorgiaFormicola.U5_W3_D5.exceptions.BadRequestException;
+import GiorgiaFormicola.U5_W3_D5.exceptions.NotFoundException;
 import GiorgiaFormicola.U5_W3_D5.payloads.ReservationDTO;
 import GiorgiaFormicola.U5_W3_D5.repositories.ReservationsRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -35,4 +37,19 @@ public class ReservationsService {
         return savedReservation;
     }
 
+    public Reservation findById(UUID reservationId) {
+        return this.reservationsRepository.findById(reservationId).orElseThrow(() -> new NotFoundException("reservation", reservationId));
+    }
+
+    public Reservation findByEventIdAndCustomerId(UUID eventId, UUID customerId) {
+        return this.reservationsRepository.findByEvent_IdAndCustomer_Id(eventId, customerId).orElseThrow(() -> new NotFoundException(eventId, customerId));
+    }
+
+    public void findByEventIdAndCustomerIdAndDelete(User currentAuthenticatedUser, UUID eventId) {
+        Event eventFound = this.eventsService.findById(eventId);
+        Reservation found = this.findByEventIdAndCustomerId(eventFound.getId(), currentAuthenticatedUser.getId());
+        if (found.getEvent().getDate().isBefore(LocalDate.now()))
+            throw new BadRequestException("Error during deleting the event, event has already taken place");
+        this.reservationsRepository.delete(found);
+    }
 }

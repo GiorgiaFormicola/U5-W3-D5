@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/reservations")
@@ -33,4 +34,12 @@ public class ReservationsController {
         }
         return this.reservationsService.save(currentAuthenticatedUser, body);
     }
+
+    @DeleteMapping("/{eventId}")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER', 'PROMOTER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void getEventReservationAndDelete(@AuthenticationPrincipal User currentAuthenticatedUser, @PathVariable UUID eventId) {
+        this.reservationsService.findByEventIdAndCustomerIdAndDelete(currentAuthenticatedUser, eventId);
+    }
+
 }

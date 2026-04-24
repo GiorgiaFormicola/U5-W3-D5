@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -14,4 +15,6 @@ public interface ReservationsRepository extends JpaRepository<Reservation, UUID>
     boolean existsByCustomer_IdAndEvent_Id(UUID customerId, UUID eventId);
 
     boolean existsByCustomer_IdAndEvent_Date(UUID customerId, LocalDate eventDate);
+
+    Optional<Reservation> findByEvent_IdAndCustomer_Id(UUID eventId, UUID customerId);
 }

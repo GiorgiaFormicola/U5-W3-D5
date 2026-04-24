@@ -10,4 +10,8 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException(String resourceType, UUID resourceId) {
         super("The " + resourceType + " with id " + resourceId + " has not been found.");
     }
+
+    public NotFoundException(UUID eventId, UUID userId) {
+        super("No reservation made by user with id " + userId + " for the event with id " + eventId);
+    }
 }
