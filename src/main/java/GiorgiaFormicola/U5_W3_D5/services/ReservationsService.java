@@ -37,10 +37,6 @@ public class ReservationsService {
         return savedReservation;
     }
 
-    public Reservation findById(UUID reservationId) {
-        return this.reservationsRepository.findById(reservationId).orElseThrow(() -> new NotFoundException("reservation", reservationId));
-    }
-
     public Reservation findByEventIdAndCustomerId(UUID eventId, UUID customerId) {
         return this.reservationsRepository.findByEvent_IdAndCustomer_Id(eventId, customerId).orElseThrow(() -> new NotFoundException(eventId, customerId));
     }

@@ -7,6 +7,7 @@ import GiorgiaFormicola.U5_W3_D5.exceptions.NotFoundException;
 import GiorgiaFormicola.U5_W3_D5.exceptions.UnauthorizedException;
 import GiorgiaFormicola.U5_W3_D5.payloads.EventDTO;
 import GiorgiaFormicola.U5_W3_D5.repositories.EventsRepository;
+import GiorgiaFormicola.U5_W3_D5.repositories.ReservationsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class EventsService {
     private final EventsRepository eventsRepository;
+    private final ReservationsRepository reservationsRepository;
 
     public Event save(User currentAuthenticatedUser, EventDTO body) {
         if (eventsRepository.existsByTitle(body.title()) && eventsRepository.existsByDateAndLocation(body.date(), body.location()))
@@ -51,11 +53,14 @@ public class EventsService {
             if (eventsRepository.existsByDateAndLocation(body.date(), body.location()))
                 throw new BadRequestException("Another event is already planned at " + body.location() + " on date " + body.date());
         }
+        if (found.getAvailableSeats() != body.availableSeats()) {
+            if (this.reservationsRepository.countReservationsByEvent_Id(found.getId()) > body.availableSeats())
+                throw new BadRequestException("Error during the update, too many reservations for the event have been made");
+        }
         found.setTitle(body.title());
         found.setDescription(body.description());
         found.setDate(body.date());
         found.setLocation(body.location());
-        //TODO: check di quante prenotazioni già esistono
         found.setAvailableSeats(body.availableSeats());
         Event updatedEvent = this.eventsRepository.save(found);
         log.info("Event with id " + updatedEvent.getId() + " successfully modified");
