@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/events")
@@ -30,5 +31,15 @@ public class EventsController {
             throw new PayloadValidationException(errors);
         }
         return this.eventsService.save(currentAuthenticatedUser, body);
+    }
+
+    @PutMapping("/{eventId}")
+    @PreAuthorize("hasAnyAuthority('PROMOTER')")
+    public Event getEventByIdAndUpdate(@AuthenticationPrincipal User currentAuthenticatedUser, @PathVariable UUID eventId, @RequestBody @Validated EventDTO body, BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            List<String> errorsList = validationResult.getAllErrors().stream().map(error -> error.getDefaultMessage()).toList();
+            throw new PayloadValidationException(errorsList);
+        }
+        return this.eventsService.findByIdAndUpdate(currentAuthenticatedUser, eventId, body);
     }
 }
