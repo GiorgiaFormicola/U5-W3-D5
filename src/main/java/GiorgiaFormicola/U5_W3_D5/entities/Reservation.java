@@ -38,6 +38,5 @@ public class Reservation {
         this.requestDate = LocalDate.now();
         this.event = event;
         this.customer = customer;
-        event.setAvailableSeats(event.getAvailableSeats() - 1);
     }
 }

@@ -43,7 +43,8 @@ public class EventsService {
         Event found = this.findById(eventId);
         if (!found.getPromoter().getId().equals(currentAuthenticatedUser.getId()))
             throw new UnauthorizedException("Access denied, you don't have the required permission");
-        if (found.getDate().isBefore(LocalDate.now())) throw new BadRequestException("Event already passed");
+        if (found.getDate().isBefore(LocalDate.now()))
+            throw new BadRequestException("Error during the update, event has already taken place");
         if (!found.getDate().equals(body.date()) || !found.getLocation().equals(body.location())) {
             if (eventsRepository.existsByTitle(body.title()) && eventsRepository.existsByDateAndLocation(body.date(), body.location()))
                 throw new BadRequestException("Event with title '" + body.title() + "' on date " + body.date() + " at " + body.location() + " already planned!");

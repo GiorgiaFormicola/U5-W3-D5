@@ -2,6 +2,7 @@ package GiorgiaFormicola.U5_W3_D5.exceptions;
 
 import GiorgiaFormicola.U5_W3_D5.payloads.ErrorDTO;
 import GiorgiaFormicola.U5_W3_D5.payloads.ErrorsListDTO;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -29,7 +30,7 @@ public class ErrorsHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return new ErrorDTO("Not valid value provided", LocalDateTime.now());
+        return new ErrorDTO("Not valid input provided, id and date must follow a valid UUID or LocalDate format", LocalDateTime.now());
     }
 
     @ExceptionHandler(UnauthorizedException.class)
@@ -48,5 +49,17 @@ public class ErrorsHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         return new ErrorDTO("Not valid ID provided", LocalDateTime.now());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorDTO handleNotFoundException(NotFoundException ex) {
+        return new ErrorDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handlePropertyReferenceException(PropertyReferenceException ex) {
+        return new ErrorDTO("Not valid search param", LocalDateTime.now());
     }
 }
