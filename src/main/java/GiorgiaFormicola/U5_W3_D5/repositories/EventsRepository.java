@@ -1,0 +1,15 @@
+package GiorgiaFormicola.U5_W3_D5.repositories;
+
+import GiorgiaFormicola.U5_W3_D5.entities.Event;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
+@Repository
+public interface EventsRepository extends JpaRepository<Event, UUID> {
+    boolean existsByDateAndLocation(LocalDate date, String location);
+
+    boolean existsByTitle(String title);
+}

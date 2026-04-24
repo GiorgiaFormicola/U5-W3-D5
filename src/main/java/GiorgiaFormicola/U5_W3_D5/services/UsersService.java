@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -29,6 +31,10 @@ public class UsersService {
 
     public User findByEmail(String email) {
         return this.usersRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(email));
+    }
+
+    public User findById(UUID userId) {
+        return this.usersRepository.findById(userId).orElseThrow(() -> new NotFoundException("user", userId));
     }
 
 
