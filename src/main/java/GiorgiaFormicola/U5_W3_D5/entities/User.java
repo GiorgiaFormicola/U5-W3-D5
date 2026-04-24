@@ -1,6 +1,7 @@
 package GiorgiaFormicola.U5_W3_D5.entities;
 
 import GiorgiaFormicola.U5_W3_D5.enums.RoleType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(nullable = false)
