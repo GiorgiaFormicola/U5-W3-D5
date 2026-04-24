@@ -76,4 +76,12 @@ public class EventsService {
         pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.eventsRepository.findAllByPromoter_Id(currentAuthenticatedUser.getId(), pageable);
     }
+
+    public void findByIdAndDelete(User currentAuthenticatedUser, UUID eventId) {
+        Event found = this.findById(eventId);
+        if (!found.getPromoter().getId().equals(currentAuthenticatedUser.getId()))
+            throw new UnauthorizedException("Access denied, you don't have the required permission");
+        this.eventsRepository.delete(found);
+    }
+
 }

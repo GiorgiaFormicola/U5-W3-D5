@@ -63,4 +63,12 @@ public class EventsController {
         }
         return this.eventsService.findByIdAndUpdate(currentAuthenticatedUser, eventId, body);
     }
+
+    @DeleteMapping("/{eventId}")
+    @PreAuthorize("hasAnyAuthority('PROMOTER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void getEventByIdAndDelete(@AuthenticationPrincipal User currentAuthenticatedUser, @PathVariable UUID eventId) {
+        this.eventsService.findByIdAndDelete(currentAuthenticatedUser, eventId);
+    }
+
 }
