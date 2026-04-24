@@ -68,4 +68,12 @@ public class EventsService {
         pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.eventsRepository.findAll(pageable);
     }
+
+    public Page<Event> findAllByPromoter(User currentAuthenticatedUser, int page, int size, String sortBy) {
+        if (page < 0) page = 0;
+        if (size < 0 || size > 100) size = 5;
+        Pageable pageable;
+        pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.eventsRepository.findAllByPromoter_Id(currentAuthenticatedUser.getId(), pageable);
+    }
 }

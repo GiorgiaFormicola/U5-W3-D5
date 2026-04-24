@@ -44,6 +44,16 @@ public class EventsController {
         return this.eventsService.findAll(page, size, sortBy);
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyAuthority('PROMOTER')")
+    public Page<Event> getPromoterEvents(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "date") String sortBy) {
+        return this.eventsService.findAllByPromoter(currentAuthenticatedUser, page, size, sortBy);
+    }
+
     @PutMapping("/{eventId}")
     @PreAuthorize("hasAnyAuthority('PROMOTER')")
     public Event getEventByIdAndUpdate(@AuthenticationPrincipal User currentAuthenticatedUser, @PathVariable UUID eventId, @RequestBody @Validated EventDTO body, BindingResult validationResult) {
